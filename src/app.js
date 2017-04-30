@@ -9,11 +9,6 @@ const T = new Twit(config);
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/templates');
-/*
-
-app.set('view engine', 'pug');
-app.set('views', __dirname + '/templates');
-*/
 
 app.get('/', (req, res) => {
 
