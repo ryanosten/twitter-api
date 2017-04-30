@@ -1,4 +1,4 @@
 .DS_Store
 .sass-cache
 node_modules/
-js/config.js
+src/config.js
