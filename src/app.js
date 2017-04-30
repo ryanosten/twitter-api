@@ -4,12 +4,11 @@ const config = require ('./config.js');
 const Twit = require('twit');
 const express = require('express');
 const app = express();
-const path = require('path');
 const T = new Twit(config);
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, '../templates'));
+app.set('views', __dirname + '/templates');
 /*
 
 app.set('view engine', 'pug');
@@ -33,7 +32,6 @@ app.get('/', (req, res) => {
   }
 
   tweetsPromise.then(handlePromiseResults).catch(handlePromiseError);
-
 
   res.render('index');
 });
