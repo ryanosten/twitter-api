@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
     for (let item of data){
       let tweet_key = `tweet${data.indexOf(item)}`;
       tweets[tweet_key] = {
-                          timestamp: item.created_at,
+                          timestamp: item.created_at.substring(3, 16),
                           text: item.text,
                           name: item.user.name,
                           username: item.user.screen_name,
