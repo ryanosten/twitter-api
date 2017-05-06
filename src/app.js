@@ -19,23 +19,27 @@ app.get('/', (req, res) => {
   });
 
   const handlePromiseResults = function(data){
+    console.log(data);
     const user = data[0].user;
     const tweets = {};
 
     for (let item of data){
       let tweet_key = `tweet${data.indexOf(item)}`;
       tweets[tweet_key] = {
+                          timestamp: item.created_at,
                           text: item.text,
                           name: item.user.name,
                           username: item.user.screen_name,
-                          user_image: item.user.profile_image_url_https,
+                          user_image: item.user.profile_image_url,
                           retweet: item.retweet_count,
                           favorited: item.favorite_count
                           }
     }
 
     console.log(tweets);
-    res.render('index', { user: user,});
+    res.render('index', { user: user,
+                          tweets: tweets
+                        });
   }
 
   const handlePromiseError = function(e){
