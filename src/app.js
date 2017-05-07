@@ -18,8 +18,7 @@ app.get('/', (req, res) => {
     });
   });
 
-  const handlePromiseResults = function(data){
-    console.log(data);
+  const getTweets = function(data){
     const user = data[0].user;
     const tweets = {};
 
@@ -36,17 +35,39 @@ app.get('/', (req, res) => {
                           }
     }
 
-    console.log(tweets);
     res.render('index', { user: user,
                           tweets: tweets
                         });
   }
 
-  const handlePromiseError = function(e){
+  const getTweetsError = function(e){
     console.log(e);
   }
 
-  tweetsPromise.then(handlePromiseResults).catch(handlePromiseError);
+
+  //Promise for get friends list
+  const friendsPromise = new Promise((resolve, reject) => {
+      T.get('friends/list', {screen_name: 'r_osto', count: 5}, function(err, data, response){
+      resolve(data);
+    });
+  });
+
+  const getFriends = function(data){
+    const friends = data.users;
+    res.render('index', { friends: friends });
+  }
+
+  const getFriendsError = function(e){
+    console.log(e);
+  }
+
+
+  tweetsPromise.then(getTweets).catch(getTweetsError);
+  friendsPromise.then(getFriends).catch(getTweetsError);
+
+
+
+
 
   //res.render('index');
 });
