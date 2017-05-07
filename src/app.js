@@ -12,18 +12,23 @@ app.set('views', __dirname + '/templates');
 
 app.get('/', (req, res) => {
 
-  const tweetsPromise = new Promise((resolve, reject) => {
-      T.get('statuses/user_timeline', {screen_name: 'r_osto', count: 5}, function(err, data, response){
-      resolve(data);
-    });
-  });
+  const tweetsPromise = T.get('statuses/user_timeline', {screen_name: 'r_osto', count: 5});
 
-  const getTweets = function(data){
-    const user = data[0].user;
-    const tweets = {};
+  //Promise for get friends list
+  const friendsPromise = T.get('friends/list', {screen_name: 'r_osto', count: 5});
 
-    for (let item of data){
-      let tweet_key = `tweet${data.indexOf(item)}`;
+  const promiseArray = [tweetsPromise, friendsPromise];
+
+  Promise.all(promiseArray).then( (promisesResolvedArray) => {
+    let tweetData = promisesResolvedArray[0].data;
+    let friendsData = promisesResolvedArray[1].data;
+
+    //handle tweetData
+    let users = tweetData[0].user;
+    let tweets = {};
+
+    for (let item of tweetData){
+      let tweet_key = `tweet${tweetData.indexOf(item)}`;
       tweets[tweet_key] = {
                           timestamp: item.created_at.substring(3, 16),
                           text: item.text,
@@ -35,57 +40,19 @@ app.get('/', (req, res) => {
                           }
     }
 
-    res.render('index', { user: user,
-                          tweets: tweets
-                        });
-  }
+    //handle friendsData
+    let friends = friendsData.users;
 
-  const getTweetsError = function(e){
-    console.log(e);
-  }
+    res.render('index', { user: users,
+                          tweets: tweets,
+                          friends: friends
+                        })
 
-
-  //Promise for get friends list
-  const friendsPromise = new Promise((resolve, reject) => {
-      T.get('friends/list', {screen_name: 'r_osto', count: 5}, function(err, data, response){
-      resolve(data);
-    });
+  }).catch( (err) => {
+    //catch errors
   });
-
-  const getFriends = function(data){
-    const friends = data.users;
-    res.render('index', { friends: friends });
-  }
-
-  const getFriendsError = function(e){
-    console.log(e);
-  }
-
-
-  tweetsPromise.then(getTweets).catch(getTweetsError);
-  friendsPromise.then(getFriends).catch(getTweetsError);
-
-
-
-
-
-  //res.render('index');
 });
 
 app.listen(3000, () => {
   console.log("The frontend server is running on port 3000!");
 });
-
-/*
-{tweet_one: {text: data[0].text,
-              name: data[0].user.name,
-              username: data[0].screen_name,
-              user_image: data[0].profile_image_url_https,
-              retweet: data[0].retweet_count,
-              favorited: data[0].favorite_count
-            },
-   tweet_two: {
-
-            }
-  }
-  */

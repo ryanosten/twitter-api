@@ -72,12 +72,12 @@ block content
       .grid-33
         .app--section
           ul.app--user--list
-            //-each friend, index in friends
+            each friend in friends
               li
                 .circle--fluid
                   .circle--fluid--cell.circle--fluid--primary
                     a.app--tweet--author
-                      //-- var friend_image = friend.profile_image_url
+                      - var friend_image = friend.profile_image_url
                       //-.app--avatar(style='background-image: url(' + friend_image + ')')
                         //-img(src=friend_image)
                       h4 Jill Spore
