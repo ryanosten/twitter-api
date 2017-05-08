@@ -79,9 +79,9 @@ block content
                     a.app--tweet--author
                       - var friend_image = friend.profile_image_url
                       .app--avatar(style='background-image: url(' + friend_image + ')')
-                      img(src='images/f-spore.png')
-                      h4 Jill Spore
-                      p @jillspore
+                      //-img(src='images/f-spore.png')
+                      h4 #{friend.name}
+                      p @#{friend.screen_name}
                   .circle--fluid--cell
                     a.button.button-text Unfollow
 

@@ -17,11 +17,14 @@ app.get('/', (req, res) => {
   //Promise for get friends list
   const friendsPromise = T.get('friends/list', {screen_name: 'r_osto', count: 5});
 
-  const promiseArray = [tweetsPromise, friendsPromise];
+  const messagesPromise = T.get('direct_messages', {count: 5});
+
+  const promiseArray = [tweetsPromise, friendsPromise, messagesPromise];
 
   Promise.all(promiseArray).then( (promisesResolvedArray) => {
     let tweetData = promisesResolvedArray[0].data;
     let friendsData = promisesResolvedArray[1].data;
+    let messageData = promisesResolvedArray[2].data;
 
     //handle tweetData
     let users = tweetData[0].user;
