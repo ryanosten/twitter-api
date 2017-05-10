@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
   Promise.all(promiseArray).then( (promisesResolvedArray) => {
     let tweetData = promisesResolvedArray[0].data;
     let friendsData = promisesResolvedArray[1].data;
-    let messageData = promisesResolvedArray[2].data;
+    let messages = promisesResolvedArray[2].data;
 
     //handle tweetData
     let users = tweetData[0].user;
@@ -48,7 +48,8 @@ app.get('/', (req, res) => {
 
     res.render('index', { user: users,
                           tweets: tweets,
-                          friends: friends
+                          friends: friends,
+                          messages: messages
                         })
 
   }).catch( (err) => {
