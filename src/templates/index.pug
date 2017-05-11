@@ -18,7 +18,8 @@ block content
       form
         .circle--fluid
           .circle--fluid--cell.circle--fluid--primary.align-bottom.app--tweet--post
-            .app--avatar(style='background-image: url(static/images/m-spore.png)')
+            -var user_profile_image = user.profile_image_url
+            .app--avatar(style='background-image: url(' + user_profile_image + ')')
               img(src='static/images/m-spore.png')
             textarea#tweet-textarea.circle--textarea--input(placeholder="What's happening?")
             |
@@ -90,7 +91,7 @@ block content
           ul.app--message--list
             li
               h3
-                | Conversation with 
+                | Conversation with
                 - var screen_name = messages[0].sender.screen_name
                 a(href='https://www.twitter.com/' + screen_name)  #{screen_name}
               ul.app--message--conversation
