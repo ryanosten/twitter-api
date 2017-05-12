@@ -15,17 +15,17 @@ block content
                 li
                   a Sign Out
     .app--tweet
-      form
+      form(action='/', method='POST')
         .circle--fluid
           .circle--fluid--cell.circle--fluid--primary.align-bottom.app--tweet--post
             -var user_profile_image = user.profile_image_url
             .app--avatar(style='background-image: url(' + user_profile_image + ')')
               img(src='static/images/m-spore.png')
-            textarea#tweet-textarea.circle--textarea--input(placeholder="What's happening?")
+            textarea#tweet-textarea.circle--textarea--input(placeholder="What's happening?", type='text', name='message')
             |
             strong#tweet-char.app--tweet--char 140
           .circle--fluid--cell.align-bottom
-            button.button-primary Tweet
+            button.button-primary(type='submit') Tweet
     .bounds.app--body
       .app--section--header
         .grid-33

@@ -4,7 +4,14 @@ const config = require ('./config.js');
 const Twit = require('twit');
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const T = new Twit(config);
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+//app.use(bodyParser.json());
 
 app.use('/static', express.static(__dirname + '/public'));
 app.set('view engine', 'pug');
@@ -56,6 +63,10 @@ app.get('/', (req, res) => {
     //catch errors
   });
 });
+
+app.post('/', (req, res) => {
+    console.log(req.body.message);
+})
 
 app.listen(3000, () => {
   console.log("The frontend server is running on port 3000!");
