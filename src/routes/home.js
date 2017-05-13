@@ -1,9 +1,9 @@
 'use strict'
 
-const Twit = require('twit');
-const config = require ('../config.js');
 const express = require('express');
 const router = express.Router();
+const Twit = require('twit');
+const config = require ('../config.js');
 const T = new Twit(config);
 
 router.get('/', (req, res) => {
