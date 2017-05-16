@@ -30,13 +30,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-/*
-app.use((req, res) => {
-  const err = new Error('Whoops, looks like you requested has left and gone away. Try another page!');
-  res.render('error', {error: err});
-})
-*/
-
 app.listen(3000, () => {
   console.log("The frontend server is running on port 3000!");
 });
