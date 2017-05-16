@@ -6,27 +6,37 @@ const Twit = require('twit');
 const config = require ('../config.js');
 const T = new Twit(config);
 
+//handle get requests to '/' route
 router.get('/', (req, res) => {
+
+  //construct promise to get tweets using Twit
   const tweetsPromise = T.get('statuses/user_timeline', {screen_name: 'r_osto', count: 5});
 
-  //Promise for get friends list
+  //construct promise to get friends list
   const friendsPromise = T.get('friends/list', {screen_name: 'r_osto', count: 5});
 
+  //construct promise to get previous direct messages
   const messagesPromise = T.get('direct_messages', {count: 5});
 
+  //make promise array to pass into Promise.all() function
   const promiseArray = [tweetsPromise, friendsPromise, messagesPromise];
 
+  //Handle all promise data yay!
   Promise.all(promiseArray).then( (promisesResolvedArray) => {
+    //store the promise results
     let tweetData = promisesResolvedArray[0].data;
     let friendsData = promisesResolvedArray[1].data;
     let messages = promisesResolvedArray[2].data;
 
-    //handle tweetData
+    //store data about the user to use in template
     let users = tweetData[0].user;
+    //construct a tweets object
     let tweets = {};
 
+    //loop through tweetData and grab important key/values
     for (let item of tweetData){
       let tweet_key = `tweet${tweetData.indexOf(item)}`;
+      //add objects to tweets variable
       tweets[tweet_key] = {
                           timestamp: item.created_at.substring(3, 16),
                           text: item.text,
@@ -38,44 +48,57 @@ router.get('/', (req, res) => {
                           }
     }
 
-    //handle friendsData
+    //store users key in friendsData in friends variable
     let friends = friendsData.users;
 
+    //render template
     res.render('index', { user: users,
                           tweets: tweets,
                           friends: friends,
                           messages: messages
                         })
-
+  //catch errors
   }).catch( (err) => {
-    //catch errors
+    let error = new Error(err);
+    res.send(error);
   });
 });
 
 router.post('/', (req, res) => {
 
+  //store body.message of request
   let tweet = req.body.message;
 
+  //make post request to twitter with Twit
   T.post('/statuses/update', {status: tweet});
 
+  //construct promise for get tweets
   const tweetsPromise = T.get('statuses/user_timeline', {screen_name: 'r_osto', count: 5});
 
   //Promise for get friends list
   const friendsPromise = T.get('friends/list', {screen_name: 'r_osto', count: 5});
 
+  //promise for get messages
   const messagesPromise = T.get('direct_messages', {count: 5});
 
+  //make promise array to pass to Promise.all() function
   const promiseArray = [tweetsPromise, friendsPromise, messagesPromise];
 
+  //handle all promise data results
   Promise.all(promiseArray).then( (promisesResolvedArray) => {
+
+    //store all promise data
     let tweetData = promisesResolvedArray[0].data;
     let friendsData = promisesResolvedArray[1].data;
     let messages = promisesResolvedArray[2].data;
 
-    //handle tweetData
+    //get user information and store
     let users = tweetData[0].user;
+
+    //tweets object to pass to template
     let tweets = {};
 
+    //loop through tweetData and add objects to tweets variable
     for (let item of tweetData){
       let tweet_key = `tweet${tweetData.indexOf(item)}`;
       tweets[tweet_key] = {
@@ -89,17 +112,19 @@ router.post('/', (req, res) => {
                           }
     }
 
-    //handle friendsData
+    //store friendsData.users
     let friends = friendsData.users;
 
+    //render template
     res.render('index', { user: users,
                           tweets: tweets,
                           friends: friends,
                           messages: messages
                         })
-
+  //catch errors
   }).catch( (err) => {
-    //catch errors
+    let error = new Error(err);
+    res.send(error);
   });
 })
 
