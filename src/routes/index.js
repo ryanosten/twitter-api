@@ -56,7 +56,7 @@ router.get('/', (req, res) => {
                           tweets: tweets,
                           friends: friends,
                           messages: messages
-                        })
+                        });
   //catch errors
   }).catch( (err) => {
     let error = new Error(err);
@@ -120,12 +120,12 @@ router.post('/', (req, res) => {
                           tweets: tweets,
                           friends: friends,
                           messages: messages
-                        })
+                        });
   //catch errors
   }).catch( (err) => {
     let error = new Error(err);
     res.send(error);
   });
-})
+});
 
 module.exports = router;
