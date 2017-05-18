@@ -20,7 +20,7 @@ app.use('/', routes);
 
 //handle errors
 app.use((req, res, next) => {
-  const err = new Error('Not Found');
+  const err = new Error();
   err.status = 404;
   err.message = "The page you are looking for has taken a permanent vacation. Try another page.";
   next(err);
@@ -31,6 +31,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
+    status: err.status
   });
 });
 

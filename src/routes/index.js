@@ -6,14 +6,17 @@ const Twit = require('twit');
 const config = require ('../config.js');
 const T = new Twit(config);
 
+//stores username provided in terminal when app started. To start app use "node src/app.js {username}"
+const username = process.argv[2];
+
 //handle get requests to '/' route
 router.get('/', (req, res) => {
 
   //construct promise to get tweets using Twit
-  const tweetsPromise = T.get('statuses/user_timeline', {screen_name: 'r_osto', count: 5});
+  const tweetsPromise = T.get('statuses/user_timeline', {screen_name: username, count: 5});
 
   //construct promise to get friends list
-  const friendsPromise = T.get('friends/list', {screen_name: 'r_osto', count: 5});
+  const friendsPromise = T.get('friends/list', {screen_name: username, count: 5});
 
   //construct promise to get previous direct messages
   const messagesPromise = T.get('direct_messages', {count: 5});
@@ -70,7 +73,7 @@ router.post('/', (req, res) => {
   let tweet = req.body.message;
 
   //make post request to twitter with Twit
-  T.post('/statuses/update', {status: tweet});
+  const postTweet = T.post('/statuses/update', {status: tweet});
 
   //construct promise for get tweets
   const tweetsPromise = T.get('statuses/user_timeline', {screen_name: 'r_osto', count: 5});
@@ -85,7 +88,7 @@ router.post('/', (req, res) => {
   const promiseArray = [tweetsPromise, friendsPromise, messagesPromise];
 
   //handle all promise data results
-  Promise.all(promiseArray).then( (promisesResolvedArray) => {
+  postTweet.then(Promise.all(promiseArray).then( (promisesResolvedArray) => {
 
     //store all promise data
     let tweetData = promisesResolvedArray[0].data;
@@ -122,10 +125,11 @@ router.post('/', (req, res) => {
                           messages: messages
                         });
   //catch errors
-  }).catch( (err) => {
+})).catch( (err) => {
     let error = new Error(err);
     res.send(error);
   });
 });
+
 
 module.exports = router;
