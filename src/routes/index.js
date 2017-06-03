@@ -12,6 +12,12 @@ const username = process.argv[2];
 //handle get requests to '/' route
 router.get('/', (req, res) => {
 
+  const stream = T.stream('user', {with: user});
+
+  stream.on('tweet', function(tweet){
+    console.log(tweet);
+  });
+
   //construct promise to get tweets using Twit
   const tweetsPromise = T.get('statuses/user_timeline', {screen_name: username, count: 5});
 
@@ -55,7 +61,7 @@ router.get('/', (req, res) => {
     let friends = friendsData.users;
 
     //render template
-    res.render('index', { user: users,
+    res.render('index', { users: users,
                           tweets: tweets,
                           friends: friends,
                           messages: messages
@@ -73,7 +79,7 @@ router.post('/', (req, res) => {
   let tweet = req.body.message;
 
   //make post request to twitter with Twit
-  const postTweet = T.post('/statuses/update', {status: tweet});
+  T.post('/statuses/update', {status: tweet});
 
   //construct promise for get tweets
   const tweetsPromise = T.get('statuses/user_timeline', {screen_name: 'r_osto', count: 5});
@@ -88,7 +94,7 @@ router.post('/', (req, res) => {
   const promiseArray = [tweetsPromise, friendsPromise, messagesPromise];
 
   //handle all promise data results
-  postTweet.then(Promise.all(promiseArray).then( (promisesResolvedArray) => {
+  Promise.all(promiseArray).then((promisesResolvedArray) => {
 
     //store all promise data
     let tweetData = promisesResolvedArray[0].data;
@@ -119,13 +125,13 @@ router.post('/', (req, res) => {
     let friends = friendsData.users;
 
     //render template
-    res.render('index', { user: users,
+    res.render('index', { users: users,
                           tweets: tweets,
                           friends: friends,
                           messages: messages
                         });
   //catch errors
-})).catch( (err) => {
+}).catch( (err) => {
     let error = new Error(err);
     res.send(error);
   });

@@ -4,6 +4,8 @@ const express = require('express');
 const app = express();
 const routes = require('./routes/index');
 const bodyParser = require('body-parser');
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
 //use bodyParser to parse form post body
 app.use(bodyParser.urlencoded({
@@ -17,6 +19,10 @@ app.set('views', __dirname + '/templates');
 
 //route handler for '/' route
 app.use('/', routes);
+
+io.on('connection', function(socket){
+  socket.emit()
+})
 
 //handle errors
 app.use((req, res, next) => {
@@ -35,6 +41,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(3000, () => {
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
+http.listen(3000, () => {
   console.log("The frontend server is running on port 3000!");
 });
