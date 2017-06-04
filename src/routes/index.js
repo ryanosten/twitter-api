@@ -86,6 +86,8 @@ router.post('/', (req, res) => {
   //make post request to twitter with Twit
   T.post('/statuses/update', {status: tweet});
 
+  res.end();
+
 });
 
 module.exports = router;
