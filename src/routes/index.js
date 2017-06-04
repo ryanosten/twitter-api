@@ -75,7 +75,6 @@ router.get('/', (req, res) => {
   });
 });
 
-
 router.post('/', (req, res) => {
 
   //store body.message of request
@@ -85,7 +84,5 @@ router.post('/', (req, res) => {
   T.post('/statuses/update', {status: tweet});
 
 });
-
-
 
 module.exports = router;
