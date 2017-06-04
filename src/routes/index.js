@@ -77,6 +77,7 @@ router.get('/', (req, res) => {
   });
 });
 
+//handle post requests
 router.post('/', (req, res) => {
 
   //store body.message of request
