@@ -12,8 +12,10 @@ const username = process.argv[2];
 //handle get requests to '/' route
 router.get('/', (req, res) => {
 
+  //open stream for tweets
   const stream = T.stream('user');
 
+  //when tweet received in stream, emit tweet event tweet to client via websocket
   stream.on('tweet', function(tweet){
     if (tweet.user.screen_name == username) {
       req.io.emit('tweet', tweet);

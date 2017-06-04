@@ -17,6 +17,7 @@ app.use('/static', express.static(__dirname + '/public'));
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/templates');
 
+//connect socket.io websocket
 io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('disconnect', () => {
@@ -24,6 +25,7 @@ io.on('connection', (socket) => {
   });
 });
 
+//make socket.io object available to router
 app.use((req, resq, next) => {
   req.io = io;
   next();
