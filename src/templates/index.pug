@@ -16,7 +16,7 @@ block content
                 li
                   a Sign Out
     .app--tweet
-      form(action='/', method='POST')
+      form(action="/", method="POST")
         .circle--fluid
           .circle--fluid--cell.circle--fluid--primary.align-bottom.app--tweet--post
             -var user_profile_image = users.profile_image_url
@@ -126,4 +126,20 @@ block content
 
           $('ul.app--tweet--list').prepend(newTweet);
 
+        });
+
+        $('form').on('submit', function(e){
+
+          var datastring = $('form').serialize();
+
+          $.ajax({
+            type: "POST",
+            url: "http://localhost:3000",
+            data: datastring,
+            dataType: "json"
+          });
+
+          e.preventDefault();
+          $('textarea').val('');
+          return false;
         });

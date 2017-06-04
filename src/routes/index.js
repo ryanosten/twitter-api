@@ -16,7 +16,6 @@ router.get('/', (req, res) => {
 
   stream.on('tweet', function(tweet){
     if (tweet.user.screen_name == username) {
-      console.log(tweet);
       req.io.emit('tweet', tweet);
     }
   });
@@ -76,6 +75,7 @@ router.get('/', (req, res) => {
   });
 });
 
+
 router.post('/', (req, res) => {
 
   //store body.message of request
@@ -83,7 +83,10 @@ router.post('/', (req, res) => {
 
   //make post request to twitter with Twit
   T.post('/statuses/update', {status: tweet});
-  
+
+  /*
+  res.redirect('/');
+
   //construct promise for get tweets
   const tweetsPromise = T.get('statuses/user_timeline', {screen_name: 'r_osto', count: 5});
 
@@ -138,7 +141,9 @@ router.post('/', (req, res) => {
     let error = new Error(err);
     res.send(error);
   });
+*/
 });
+
 
 
 module.exports = router;
