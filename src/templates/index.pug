@@ -104,5 +104,26 @@ block content
                     p.app--message--text #{message.text}
                     p.app--message--timestamp #{message.created_at.substring(3, 16)}
       script(src="/socket.io/socket.io.js")
+      script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
       script.
         var socket = io();
+        socket.on('tweet', function(tweet){
+
+          var lastTweet = document.getElementsByClassName("app--tweet--list")[0].lastElementChild;
+          lastTweet.remove();
+
+          var tweetListItem = $('ul.app--tweet--list li').first().html();
+          var newTweet = $('<li></li>').html(tweetListItem);
+          var userImage = 'url(' + tweet.user.profile_image_url + ');';
+
+          newTweet.find('.app--tweet--timestamp').text(tweet.created_at.substring(3,16));
+          newTweet.find('.app--avatar').css('background-image', userImage);
+          newTweet.find('h4').text(tweet.user.name);
+          newTweet.find('.app--tweet--author').append(tweet.user.username);
+          newTweet.find('p').text(tweet.text);
+          newTweet.find('.app--retweet strong').text(tweet.retweet_count);
+          newTweet.find('.app--like strong').text(tweet.favorite_count);
+
+          $('ul.app--tweet--list').prepend(newTweet);
+
+        });

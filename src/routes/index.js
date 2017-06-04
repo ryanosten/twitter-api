@@ -12,10 +12,13 @@ const username = process.argv[2];
 //handle get requests to '/' route
 router.get('/', (req, res) => {
 
-  const stream = T.stream('user', {with: user});
+  const stream = T.stream('user');
 
   stream.on('tweet', function(tweet){
-    console.log(tweet);
+    if (tweet.user.screen_name == username) {
+      console.log(tweet);
+      req.io.emit('tweet', tweet);
+    }
   });
 
   //construct promise to get tweets using Twit
@@ -80,7 +83,7 @@ router.post('/', (req, res) => {
 
   //make post request to twitter with Twit
   T.post('/statuses/update', {status: tweet});
-
+  
   //construct promise for get tweets
   const tweetsPromise = T.get('statuses/user_timeline', {screen_name: 'r_osto', count: 5});
 

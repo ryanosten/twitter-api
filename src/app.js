@@ -17,12 +17,20 @@ app.use('/static', express.static(__dirname + '/public'));
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/templates');
 
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
+app.use((req, resq, next) => {
+  req.io = io;
+  next();
+})
+
 //route handler for '/' route
 app.use('/', routes);
-
-io.on('connection', function(socket){
-  socket.emit()
-})
 
 //handle errors
 app.use((req, res, next) => {
@@ -38,13 +46,6 @@ app.use((err, req, res, next) => {
   res.render('error', {
     message: err.message,
     status: err.status
-  });
-});
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
   });
 });
 
